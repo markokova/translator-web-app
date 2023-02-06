@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 from .models import Job, Bid, Dispute, Message, Rating
+from .forms import JobForm
 
 # Create your views here.
 def home(request):
@@ -17,6 +18,11 @@ def jobs_index(request):
     return render(request, 'app/jobs_index.html', context)
 
 def new_job(request):
+    form = JobForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'app/jobs_new.html', context)
     pass
 
 def job_detail(request, job_id):

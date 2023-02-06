@@ -11,15 +11,43 @@ class Account(models.Model):
         return f"{self.id} - {self.name}"
 
 class Job(models.Model):
+    class Status(models.TextChoices):
+        AVAILABLE = 'available', "Available"
+        ASSIGNED = 'assigned', "Assigned"
+        IN_PROGRESS = 'in_progress', "In Progress"
+        COMPLETED = 'completed', "Completed"
+
+    class Field(models.TextChoices):
+        ART = 'art', "Art"
+        BUS = 'business', "Business"
+        COMP = 'computers', "Computers"
+        EDU = 'education', "Education"
+        ENG = 'engineering', "Engineering"
+        FIN = 'finance', "Finance"
+        LAW = 'law', "Law"
+        LIT = 'literature', "Literature"
+        MED = 'medicine', "Medicine"
+        SCI = 'science', "Science"
+        SOC = 'social_sciences', "Social Sciences"
+        TECH = 'technology', "Technology"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     source_lang = models.CharField(max_length=100)
     target_lang = models.CharField(max_length=100)
-    field = models.CharField(max_length=100)
+    field = models.CharField(
+            max_length=100,
+            choices=Field.choices,
+            default=Field.ENG,
+    )
     budget = models.DecimalField(max_digits=8, decimal_places=2)
     text = models.TextField()
-    status = models.CharField(max_length=100, default='available')
+    status = models.CharField(
+            max_length=100, 
+            choices=Status.choices,
+            default=Status.AVAILABLE,
+    )
     translation = models.TextField(blank=True, null=True)
     def __str__(self):
         return f"{self.user.account.name} - {self.title}"

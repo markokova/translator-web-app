@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<h1>Submit new job</h1>
+
+<form action="#" method="post">
+  
+  {% csrf_token %}
+  
+  {{ form.as_p }}
+
+  <input type="submit" value="Post a job" />
+</form>
+  
+{% endblock content %}

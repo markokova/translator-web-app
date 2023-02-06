@@ -5,8 +5,38 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from app.models import Account, Job, Bid, Dispute, Message, Rating
+from app.forms import UserForm, AccountForm
+
 
 # Create your views here.
+
+# See the comment in forms.py for an explanation of why we use two forms
+def register(request):
+    if request.method == 'POST':
+        # Each form is validated separately, each form takes the data from the
+        # request that is relevant to it.
+        user_form = UserForm(request.POST)
+        account_form = AccountForm(request.POST)
+        # Only if both forms are valid, we save the data to the database
+        if user_form.is_valid() and account_form.is_valid():
+            user = user_form.save()
+            # We need to set the password separately, because the UserForm
+            # doesn't have a password field, it uses two fields for the password
+            # and password confirmation.
+            user.set_password(user_form.cleaned_data['password1'])
+            user.save()
+
+            # We need to set the user field on the account before we can save it
+            account = account_form.save(commit=False)
+            account.user = user
+            account.save()
+            return HttpResponseRedirect(reverse('accounts:dashboard'))
+        else:
+            return render(request, 'accounts/register.html', {'user_form': user_form, 'account_form': account_form})
+    else:
+        user_form = UserForm()
+        account_form = AccountForm()
+        return render(request, 'accounts/register.html', {'user_form': user_form, 'account_form': account_form})
 
 @login_required
 def dashboard(request):

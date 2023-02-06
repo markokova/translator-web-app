@@ -1,3 +1,8 @@
 /env
 /**/*/__pycache__/*
 /**/*/*.pyc
+/django
+/exercise_files
+tags
+tags.lock
+tags.temp

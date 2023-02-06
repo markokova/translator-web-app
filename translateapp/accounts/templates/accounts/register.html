@@ -1,0 +1,54 @@
+{% extends 'app/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+  <h1>Register an account with us!</h1>
+  <form method="post">
+    {% csrf_token %}
+
+    {% for hidden in user_form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+    {% for hidden in account_form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h2>Enter you user details</h2>
+          {% for field in user_form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field|add_class:'form-control' }}
+              {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          <h2>Enter you account details</h2>
+          {% for field in account_form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field|add_class:'form-control' }}
+              {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+              {% endfor %}
+            </div>
+          {% endfor %}
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> Save
+            </button>
+            <a href="{% url 'home_path' %}" class="btn btn-default">Cancel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+  </form>
+{% endblock %}

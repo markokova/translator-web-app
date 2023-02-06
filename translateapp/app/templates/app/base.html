@@ -37,11 +37,14 @@
                 <a class="nav-link" href="{% url 'accounts:dashboard' %}">{{ user.account.name }}</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'logout' %}"> Odjava</a>
+                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
               </li>
             {% else %}
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'login' %}">Prijava</a>
+                <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
             {% endif %}
           </ul>

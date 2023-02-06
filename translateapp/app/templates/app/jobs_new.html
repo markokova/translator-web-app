@@ -11,21 +11,40 @@
       {{ hidden }}
     {% endfor %}
 
-    {% for field in form.visible_fields %}
-      <div class="form-group">
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {{ field|add_class:'form-control' }}
-        {% for error in field.errors %}
-          <span class="help-block">{{ error }}</span>
-        {% endfor %}
-      </div>
-    {% endfor %}
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          {% for field in form.visible_fields %}
+            {% if field.label != "Text" %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field|add_class:'form-control' }}
+                {% for error in field.errors %}
+                  <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
 
-    <div class="form-group">
-      <button type="submit" class="btn btn-success">
-        <span class="glyphicon glyphicon-ok"></span> Save
-      </button>
-      <a href="{% url 'home_path' %}" class="btn btn-default">Cancel</a>
+          <div class="form-group">
+            <button type="submit" class="btn btn-success">
+              <span class="glyphicon glyphicon-ok"></span> Save
+            </button>
+            <a href="{% url 'home_path' %}" class="btn btn-default">Cancel</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+            {{ form.text|add_class:'form-control' }}
+            {% for error in form.text.errors %}
+              <span class="help-block">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
+    
+
   </form>
 {% endblock %}

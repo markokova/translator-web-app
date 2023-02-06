@@ -1,0 +1,41 @@
+{% extends 'app/base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Hello {{ user.account.name }}</h1>
+      <p>Token balance: <strong>{{ user.account.balance }}</strong></p>
+      <p>Email: {{ user.email }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h1>My Jobs</h1>
+
+      {% for job in my_jobs  %}
+
+        <div class="job">
+          <h3>{{ job.title }}</h3>
+          <p>
+            <strong>{{ job.description   }}</strong> </br>
+            Source language: {{ job.source_lang   }}; 
+            Target language: {{ job.target_lang   }}
+          </p>
+          <p>{{ job.field   }}</p>
+          <p>{{ job.budget   }}</p>
+          <p>{{ job.status   }}</p>
+        </div>
+        
+      
+        
+      {% endfor %}
+
+    </div>
+  </div>
+  
+</div>
+
+{% endblock content %}

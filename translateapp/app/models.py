@@ -29,6 +29,8 @@ class Bid(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     accepted = models.BooleanField()
+    def __str__(self):
+        return f"{self.bidder.account.name} - {self.job.title} - {self.price}"
 
 class Dispute(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

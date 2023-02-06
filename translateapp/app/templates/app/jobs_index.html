@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+
+
+{% block content %}
+<h1>Available jobs</h1>
+
+<table class="jobs">
+{% for job in jobs %}
+    <tr>
+      <td>
+        <strong>
+          <a href="{% url 'app:job_detail' job.id %}">{{ job.title }}</a>
+        </strong>
+      </td>
+      <td>{{ job.owner.name }}</td>
+      <td>{{ job.source_lang }} to {{ job.target_lang }} </td>
+      <td>Budget: {{ job.budget }}</td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        {{ job.description }}
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" style="border: none;">
+        &nbsp;
+      </td>
+    </tr>
+{% empty %}
+  <tr>
+    <td colspan="4"> No available jobs at this moment</td>
+  </tr>
+{% endfor %}
+</table>
+
+{% endblock content %}

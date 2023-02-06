@@ -66,3 +66,12 @@
   margin-right: auto;
   margin-left: 5px;
 }
+
+table.jobs {
+  width: 100%;
+}
+
+table.jobs td {
+  padding: 5px;
+  border: 1px solid black;
+}

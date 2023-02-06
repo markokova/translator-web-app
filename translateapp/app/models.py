@@ -30,6 +30,9 @@ class Job(models.Model):
     def accepted_bidder(self):
         return self.accepted_bid().bidder.account
 
+    def owner(self):
+        return self.user.account
+
     @classmethod
     def accepted_jobs_for(cls, user):
         # Svi bidovi gdje je user napravio job na koji je biddano

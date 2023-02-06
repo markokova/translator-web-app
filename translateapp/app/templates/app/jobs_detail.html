@@ -4,16 +4,37 @@
 {% block content %}
 <h1>{{ job.title }}</h1>
 <h2>{{ job.description }}</h2>
-<p><strong>Job details:</strong></p>
-<p>
-  <ul>
-    <!--source_lang, target_lang, field, budget, owner, text, -->
-    <li>From {{ job.get_source_lang_display }} to {{ job.get_target_lang_display }}</li>
-    <li>Field: {{ job.get_field_display }}</li>
-    <li>Budget: {{ job.budget }}</li>
-    <li>Owner: {{ job.owner }}</li>
-  </ul>
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <p><strong>Job details:</strong></p>
+      <p>
+        <ul>
+          <!--source_lang, target_lang, field, budget, owner, text, -->
+          <li>From {{ job.get_source_lang_display }} to {{ job.get_target_lang_display }}</li>
+          <li>Field: {{ job.get_field_display }}</li>
+          <li>Budget: {{ job.budget }}</li>
+          <li>Owner: {{ job.owner }}</li>
+        </ul>
+      </p>
+    </div>
+    <div class="col-md-4">
+      <h2>Enter your bid:</h2>
+      <form action="{% url 'app:bid' job.id %}" method="post" >
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="price">Bid</label>
+          <input type="number" class="form-control" id="price" name="price" placeholder="Enter bid">
+          {% for error in form.price.errors %}
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+        
+      </form>
+    </div>
+  </div>
+</div>
 <p class="with-whitespace">
   <strong>Text:</strong></br>
   {{ job.text }}

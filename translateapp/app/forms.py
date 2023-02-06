@@ -49,5 +49,6 @@ class AccountForm(ModelForm):
             "translator": "Do you want to be a translator?",
         }
 
-
+class BidForm(forms.Form):
+    price = forms.DecimalField(max_digits=8, decimal_places=2, min_value=0.01)
 

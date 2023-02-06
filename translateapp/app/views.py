@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 from .models import Job, Bid, Dispute, Message, Rating
-from .forms import JobForm
+from .forms import JobForm, BidForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -58,7 +58,26 @@ def new_job(request):
 @login_required
 def job_detail(request, job_id):
     job = get_object_or_404(Job, pk=job_id)
+    form = BidForm()
     context = {
         'job': job,
+        'form': form,
     }
     return render(request, 'app/jobs_detail.html', context)
+
+@login_required
+def bid(request, job_id):
+    if request.method == 'POST' and request.user.account.translator:
+        job = get_object_or_404(Job, pk=job_id)
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid = Bid(price=form.cleaned_data['price'], 
+                    job=job, 
+                    bidder=request.user)
+            bid.save()
+            return HttpResponseRedirect(reverse('app:job_detail', args=(job.id,)))
+        else:
+            return render(request, 'app/jobs_detail.html', {'job': job, 'form': form})
+
+
+

@@ -11,12 +11,16 @@ def home(request):
     context = {}
     return render(request, 'app/home.html', context)
 
+@login_required
 def jobs_index(request):
-    jobs = Job.objects.filter(status='available')
-    context = {
-        'jobs': jobs,
-    }
-    return render(request, 'app/jobs_index.html', context)
+    if request.user.account.translator:
+        jobs = Job.objects.filter(status='available')
+        context = {
+            'jobs': jobs,
+        }
+        return render(request, 'app/jobs_index.html', context)
+    else:
+        return HttpResponseRedirect(reverse('home_path'))
 
 @login_required
 def new_job(request):

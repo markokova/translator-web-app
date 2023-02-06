@@ -21,12 +21,16 @@
             <li class="nav-item active">
               <a class="nav-link" href="/">Home</a>
             </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'app:new_job'  %}">Submit new job</a>
-            </li>
-            <li class="nav-item active">
-              <a class="nav-link" href="{% url 'app:jobs' %}">See available jobs</a>
-            </li>
+            {% if user.is_authenticated %}
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'app:new_job'  %}">Submit new job</a>
+              </li>
+              {% if user.account.translator %}
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'app:jobs' %}">See available jobs</a>
+                </li>
+              {% endif %}
+            {% endif %}
           </ul>
           <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}

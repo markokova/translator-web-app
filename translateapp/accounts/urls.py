@@ -5,4 +5,5 @@ app_name = "accounts"
 
 urlpatterns = [
         path('dashboard', views.dashboard, name="dashboard"),
+        path('profile/<int:user_id>', views.profile, name="profile"),
 ]

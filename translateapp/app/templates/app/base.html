@@ -25,7 +25,13 @@
           <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
               <li class="nav-item active">
-                <a class="nav-link" href="{% url 'logout' %}">{{user.username}} | Odjava</a>
+                <a class="nav-link" href="{% url 'accounts:profile' user.id %}">My profile</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'accounts:dashboard' %}">{{ user.account.name }}</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout' %}"> Odjava</a>
               </li>
             {% else %}
               <li class="nav-item active">

@@ -1,0 +1,75 @@
+{% extends 'app/base.html' %}
+
+<!--USER PROFILE -->
+
+{% block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>{{ profile_user.account.name }}'s profile page</h1>
+      <p>Email: {{ profile_user.email }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <h1>User's accepted jobs</h1>
+      {% for job in accepted_jobs  %}
+
+        <div class="job">
+          <h3>{{ job.title }}</h3>
+          <p>
+            <strong>{{ job.description   }}</strong> </br>
+            Source language: {{ job.source_lang   }}; 
+            Target language: {{ job.target_lang   }}
+          </p>
+          <p>{{ job.field   }}</p>
+          <p>{{ job.budget   }}</p>
+          <p>{{ job.status   }}</p>
+
+          <p>
+            <strong>
+              {{ job.accepted_bidder.name }} was accepted for this job with the 
+              bid of {{ job.accepted_bid.price }}
+            </strong>
+          </p>
+
+        </div>
+      {% empty %}
+        <p>No accepted jobs</p>
+      {% endfor %}
+
+    </div>
+    <div class="col-md-12">
+      <h1>User's completed jobs</h1>
+      {% for job in completed_jobs  %}
+
+        <div class="job">
+          <h3>{{ job.title }}</h3>
+          <p>
+            <strong>{{ job.description   }}</strong> </br>
+            Source language: {{ job.source_lang   }}; 
+            Target language: {{ job.target_lang   }}
+          </p>
+          <p>{{ job.field   }}</p>
+          <p>{{ job.budget   }}</p>
+          <p>{{ job.status   }}</p>
+
+          <p>
+            <strong>
+              {{ job.accepted_bidder.name }} has completed this job for the 
+              price of {{ job.accepted_bid.price }}
+            </strong>
+          </p>
+
+        </div>
+      {% empty %}
+        <p>No completed jobs</p>
+      {% endfor %}
+
+    </div>
+  </div>
+  
+</div>
+
+{% endblock content %}

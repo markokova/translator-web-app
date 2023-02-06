@@ -1,18 +1,16 @@
 {% extends 'app/base.html' %}
 
+<!--USER DASHBOARD-->
 
 {% block content %}
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-9">
       <h1>Hello {{ user.account.name }}</h1>
       <p>Token balance: <strong>{{ user.account.balance }}</strong></p>
       <p>Email: {{ user.email }}</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
+
       <h1>My Jobs</h1>
 
       {% for job in my_jobs  %}
@@ -27,13 +25,47 @@
           <p>{{ job.field   }}</p>
           <p>{{ job.budget   }}</p>
           <p>{{ job.status   }}</p>
+
+          <div>
+          {% for bid in job.bid_set.all  %}
+            <div class="bid">
+              <h2>
+                Bidder: 
+                <a href="{% url 'accounts:profile' bid.bidder.id %}">
+                  {{ bid.bidder.account.name }}
+                </a>
+              </h2>
+              <p><strong>Price: {{ bid.price }}</strong></p>
+              <p>Accepted: {{ bid.accepted }}</p>
+            </div>
+          {% endfor %}
+          </div>
+
         </div>
-        
-      
-        
       {% endfor %}
 
     </div>
+    <div class="col-md-3">
+      <h1>Messages</h1>
+      <div class="messages">
+        {% for message in my_messages %}
+          <div class="message {% if user == message.sender %} my-message {% else %} their-message {% endif %}">
+            {% if user != message.sender  %}
+              <strong> From: 
+                <a href="{% url 'accounts:profile' message.sender.id %}">
+                  {{ message.sender.account.name }}
+                </a>
+              </strong> </br>
+            {% endif %}
+            <small>{{ message.sent_at }}</small>
+            <p>{{ message.text }}</p>
+          </div>
+        {% endfor %}
+
+
+      </div>
+    </div>
+    
   </div>
   
 </div>

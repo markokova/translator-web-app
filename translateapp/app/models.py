@@ -31,11 +31,28 @@ class Job(models.Model):
         SOC = 'social_sciences', "Social Sciences"
         TECH = 'technology', "Technology"
 
+    class Language(models.TextChoices):
+        ENG = 'en', "English"
+        SPA = 'spa', "Spanish"
+        FRE = 'fr', "French"
+        GER = 'de', "German"
+        ITA = 'it', "Italian"
+        JPN = 'ja', "Japanese"
+        CRO = 'hr', "Croatian"
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
-    source_lang = models.CharField(max_length=100)
-    target_lang = models.CharField(max_length=100)
+    source_lang = models.CharField(
+            max_length=3, 
+            choices=Language.choices,
+            default=Language.ENG,
+    )
+    target_lang = models.CharField(
+            max_length=3,
+            choices=Language.choices,
+            default=Language.CRO,
+    )
     field = models.CharField(
             max_length=100,
             choices=Field.choices,

@@ -55,5 +55,10 @@ def new_job(request):
         }
         return render(request, 'app/jobs_new.html', context)
 
+@login_required
 def job_detail(request, job_id):
-    pass
+    job = get_object_or_404(Job, pk=job_id)
+    context = {
+        'job': job,
+    }
+    return render(request, 'app/jobs_detail.html', context)

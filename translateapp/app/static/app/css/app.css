@@ -85,3 +85,9 @@ table.jobs td.bid-controls-row {
 .help-block {
   color: red;
 }
+
+.with-whitespace {
+  white-space: pre-wrap;
+}
+
+

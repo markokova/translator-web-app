@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 from .models import Job, Bid, Dispute, Message, Rating
-from .forms import JobForm, BidForm
+from .forms import JobForm, BidForm, TranslationForm
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -91,5 +91,29 @@ def accept_bid(request, bid_id):
         job.status = Job.Status.ASSIGNED
         job.save()
         return HttpResponseRedirect(reverse('accounts:dashboard'))
+
+@login_required
+def deliver_translation(request, bid_id):
+    bid = get_object_or_404(Bid, pk=bid_id)
+    job = bid.job
+
+    if request.method == 'POST' and bid.accepted and request.user == bid.bidder:
+        form = TranslationForm(request.POST)
+        if form.is_valid():
+            job.translation = form.cleaned_data['translation']
+            job.status = Job.Status.COMPLETED
+            job.save()
+            bid.completed = True
+            bid.save()
+            return HttpResponseRedirect(reverse('accounts:dashboard'))
+        else:
+            return render(request, 'app/deliver_translation.html', {'job': job, 'form': form})
+    else:
+        form = TranslationForm()
+        context = {
+            'job': job,
+            'form': form,
+        }
+        return render(request, 'app/deliver_translation.html', context)
 
 

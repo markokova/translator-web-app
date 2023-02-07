@@ -77,16 +77,37 @@
 
       <h2>My won bids (Jobs assigned to me)</h2>
         {% for bid in my_won_bids  %}
-          <div class="bid {% if bid.accepted %} accepted {% endif %}">
-            <p>
-              <strong>My bid on {{ bid.job.title }} for {{ bid.price }} tokens.</strong>
-            </p>
-            <p>
-              {{ bid.job.description   }}</br>
-              From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
-            </p>
-            <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
-          </div>
+          {% if not bid.completed %}
+            <div class="bid {% if bid.accepted %} accepted {% endif %}">
+              <p>
+                <strong>My bid on {{ bid.job.title }} for {{ bid.price }} tokens.</strong>
+              </p>
+              <p>
+                {{ bid.job.description   }}</br>
+                From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
+              </p>
+              <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
+
+              <p><a href="{% url 'app:deliver_translation' bid.id %}">Submit your translation</a></p>
+            </div>
+          {% endif %}
+        {% endfor %}
+
+      <h2>My completed jobs</h2>
+        {% for bid in my_won_bids  %}
+          {% if bid.completed %}
+            <div class="bid {% if bid.accepted %} accepted {% endif %}">
+              <p>
+                <strong>My bid on {{ bid.job.title }} for {{ bid.price }} tokens.</strong>
+              </p>
+              <p>
+                {{ bid.job.description   }}</br>
+                From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
+              </p>
+              <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
+              <p class="with-whitespace">Translation: {{ bid.job.translation }}</p>
+            </div>
+          {% endif %}
         {% endfor %}
 
 

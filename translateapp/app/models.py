@@ -91,6 +91,9 @@ class Job(models.Model):
     def is_available(self):
         return self.status == self.Status.AVAILABLE
 
+    def is_completed(self):
+        return self.status == self.Status.COMPLETED
+
     @classmethod
     def accepted_jobs_for(cls, user):
         # Svi bidovi gdje je user napravio job na koji je biddano
@@ -104,6 +107,7 @@ class Bid(models.Model):
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     accepted = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.bidder.account.name} - {self.job.title} - {self.price}"
 

@@ -52,3 +52,15 @@ class AccountForm(ModelForm):
 class BidForm(forms.Form):
     price = forms.DecimalField(max_digits=8, decimal_places=2, min_value=0.01)
 
+
+class TranslationForm(forms.Form):
+    translation = forms.CharField(widget=forms.Textarea(attrs={'rows': 20}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        translation = cleaned_data.get('translation')
+        if not translation:
+            self.add_error('translation', 'Translation must not be empty')
+
+
+

@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Translation completed!</h1>
+      <p> 
+        Bid from <a href="{% url 'accounts:profile' bid.bidder.id %}">{{ bid.bidder.account.name }}</a>
+        for a job from <a href="{% url 'accounts:profile' job.user.id %}">{{ job.user.account.name }}</a>
+      </p> 
+      <p>
+        <strong>{{ job.title }}</strong></br>
+        {{ job.description }}
+      </p>
+      <p>Job budget: {{ job.budget }}; Bid amount: {{ bid.price }} </p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Original text:</strong></p>
+      <p class="with-whitespace">
+        {{ job.text }}
+      </p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Translated text: </strong></p>
+      <p class="with-whitespace">
+        {{ job.translation }}
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+
+
+{% endblock %}

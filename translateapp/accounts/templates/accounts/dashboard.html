@@ -50,6 +50,10 @@
                     <input type="submit" value="Accept bid">
                   </form>
                 </p>
+              {% elif bid.completed %}
+                <p>
+                  <a href="{% url 'app:bid_detail' bid.id %}">See the completed translation</a>
+                </p>
               {% endif %}
             </div>
           {% endfor %}
@@ -105,7 +109,9 @@
                 From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
               </p>
               <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
-              <p class="with-whitespace">Translation: {{ bid.job.translation }}</p>
+                <p>
+                  <a href="{% url 'app:bid_detail' bid.id %}">See the completed translation</a>
+                </p>
             </div>
           {% endif %}
         {% endfor %}

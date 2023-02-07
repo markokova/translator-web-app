@@ -116,4 +116,18 @@ def deliver_translation(request, bid_id):
         }
         return render(request, 'app/deliver_translation.html', context)
 
+@login_required
+def bid_detail(request, bid_id):
+    bid = get_object_or_404(Bid, pk=bid_id)
+    job = bid.job
+    if request.user == bid.bidder or request.user == job.user:
+        context = {
+            'bid': bid,
+            'job': job,
+        }
+        return render(request, 'app/bid_detail.html', context)
+    else:
+        return HttpResponseRedirect(reverse('home_path'))
+
+
 

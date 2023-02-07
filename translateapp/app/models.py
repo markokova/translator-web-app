@@ -10,6 +10,14 @@ class Account(models.Model):
     def __str__(self):
         return f"{self.id} - {self.name}"
 
+    def rating(self):
+        ratings = Rating.objects.filter(rated=self.user)
+        if ratings.count() == 0:
+            return "No ratings yet"
+        else:
+            score = [ rating.rating for rating in ratings ] / ratings.count()
+            return score
+
 class Job(models.Model):
     class Status(models.TextChoices):
         AVAILABLE = 'available', "Available"

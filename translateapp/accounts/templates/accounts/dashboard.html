@@ -8,6 +8,9 @@
   <div class="row">
     <div class="col-md-9">
       <h1>Hello {{ user.account.name }}</h1>
+      {% if user.account.translator %}
+        <h2>Translator - Rating: {{ user.account.rating }}</h2>
+      {% endif %}
       <p>Token balance: <strong>{{ user.account.balance }}</strong></p>
       <p>Email: {{ user.email }}</p>
 
@@ -55,6 +58,39 @@
           </div>
       {% endfor %}
 
+      {% if user.account.translator %}
+      <h1>My translations dashboard</h1>
+
+      <h2>My bids</h2>
+        {% for bid in my_bids  %}
+          <div class="bid {% if bid.accepted %} accepted {% endif %}">
+            <p>
+              <strong>My bid on {{ bid.job.title }} for {{ bid.price }} tokens.</strong>
+            </p>
+            <p>
+              {{ bid.job.description   }}</br>
+              From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
+            </p>
+            <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
+          </div>
+        {% endfor %}
+
+      <h2>My won bids (Jobs assigned to me)</h2>
+        {% for bid in my_won_bids  %}
+          <div class="bid {% if bid.accepted %} accepted {% endif %}">
+            <p>
+              <strong>My bid on {{ bid.job.title }} for {{ bid.price }} tokens.</strong>
+            </p>
+            <p>
+              {{ bid.job.description   }}</br>
+              From {{ bid.job.get_source_lang_display }} to {{ bid.job.get_target_lang_display }}.
+            </p>
+            <p>Field: {{ bid.job.get_field_display }}; Status:  {{ bid.job.status   }}</p>
+          </div>
+        {% endfor %}
+
+
+      {% endif %}
     </div>
     <div class="col-md-3">
       <h1>Messages</h1>

@@ -44,9 +44,13 @@ def dashboard(request):
     my_jobs = user.job_set.all()
     my_messages = Message.objects.filter(receiver=user) | Message.objects.filter(sender=user)
     my_messages = my_messages.order_by('-sent_at')
+    my_bids = user.bid_set.all()
+    my_won_bids = user.bid_set.filter(accepted=True)
     context = {
         'my_jobs': my_jobs,
         'my_messages': my_messages,
+        'my_bids': my_bids,
+        'my_won_bids': my_won_bids,
     }
 
     return render(request, 'accounts/dashboard.html', context)

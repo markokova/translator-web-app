@@ -99,4 +99,14 @@ table.jobs td.bid-controls-row {
   background: #f1fff1;
 }
 
+.won-job {
+  color: green;
+  font-weight: bold;
+}
+
+.lost-job {
+  color: red;
+  font-weight: bold;
+}
+  
 

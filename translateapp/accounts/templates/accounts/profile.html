@@ -8,6 +8,9 @@
   <div class="row">
     <div class="col-md-12">
       <h1>{{ profile_user.account.name }}'s profile page</h1>
+      {% if user.account.translator %}
+        <h2>Translator - Rating: {{ profile_user.account.rating }}</h2>
+      {% endif %}
       <p>Email: {{ profile_user.email }}</p>
     </div>
   </div>
@@ -68,6 +71,40 @@
       {% endfor %}
 
     </div>
+    {% if user.account.translator %}
+      <div class="col-md-12">
+        <h1>Translator's stats</h1>
+        <h2>User's bids</h2>
+        {% for bid in bids  %}
+          <h3>Bid on {{ bid.job.title }} for {{ bid.price }} tokens</h3>
+          {% if bid.accepted %}
+            <p class="won-job">Won the job!</p>
+          {% else %}
+            <p class="lost-job">Someone else was cheaper :(</p>
+          {% endif %}
+
+        {% empty %}
+          <p>No bids on any jobs</p>
+        {% endfor %}
+
+        <h2>Won jobs - currently working on:</h2>
+        {% for bid in won  %}
+          <h3>{{ bid.job.title }} for {{ bid.price }} tokens</h3>
+          <p>Translating from 
+            {{ bid.job.get_source_lang_display }} to 
+            {{ bid.job.get_target_lang_display }} a text 
+            in the field of {{ bid.job.get_field_display }}.
+          </p>
+          <p>Job posted by <a href="{% url "accounts:profile" bid.job.user.id %}">{{ bid.job.user.account.name }}</a></p>
+
+        {% empty %}
+          <p>Didn't win any jobs!</p>
+        {% endfor %}
+
+
+
+      </div>
+    {% endif %}
   </div>
   
 </div>

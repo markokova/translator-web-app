@@ -62,10 +62,14 @@ def profile(request, user_id):
     accepted_jobs = Job.accepted_jobs_for(user)
     completed_jobs = Job.objects.filter(user=user, status='completed')
 
+    bids = user.bid_set.all()
+    won = user.bid_set.filter(accepted=True)
 
     context = {
         'profile_user': user,
         'accepted_jobs': accepted_jobs,
         'completed_jobs': completed_jobs,
+        'bids': bids,
+        'won': won,
     }
     return render(request, 'accounts/profile.html', context)

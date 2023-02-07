@@ -18,6 +18,10 @@ class Account(models.Model):
             score = [ rating.rating for rating in ratings ]
             return sum(score) / len(score)
 
+    def raise_if_invalid_balance(self):
+        if self.balance < 0:
+            raise ValueError("Balance cannot be negative")
+
 class Job(models.Model):
     class Status(models.TextChoices):
         AVAILABLE = 'available', "Available"

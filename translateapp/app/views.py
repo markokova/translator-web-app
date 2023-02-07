@@ -6,6 +6,8 @@ from .models import Job, Bid, Dispute, Message, Rating
 from .forms import JobForm, BidForm, TranslationForm
 from django.contrib.auth.decorators import login_required
 
+from django.db import transaction
+
 # Create your views here.
 def home(request):
     context = {}
@@ -135,13 +137,47 @@ def rate_bid(request, bid_id):
     job = bid.job
 
     if request.method == 'POST' and request.user == job.user:
-        rating = Rating.objects.create(
-            rating=request.POST['rating'],
-            rater=request.user,
-            rated=bid.bidder,
-            job=job,
-            bid=bid,
-        )
+        # Transaction is used to ensure that all the db operations are
+        # atomic, ie. either all the operations succeed, or all of
+        # them are rolled back. We want to avoid a situation where a
+        # user rates a translation, gets tokens deducted, and then a
+        # bug happens in saving the bidder balance and bidder never
+        # gets the tokens. Tokens then remain in limbo, they were
+        # deducted from the owner, but never arrived at the bidder's
+        # account.
+        #https://docs.djangoproject.com/en/4.1/topics/db/transactions/
+        try: 
+            with transaction.atomic():
+                rating = Rating(
+                    rating=request.POST['rating'],
+                    rater=request.user,
+                    rated=bid.bidder,
+                    job=job,
+                    bid=bid,
+                )
+
+                owner = request.user.account
+                bidder = bid.bidder.account
+
+                owner.balance -= bid.price
+                owner.raise_if_invalid_balance()
+                bidder.balance += bid.price
+                bidder.raise_if_invalid_balance()
+
+                owner.save()
+                bidder.save()
+                rating.save()
+
+        except Exception as e:
+            # Returning the user with the caught error in the context allows us
+            # to display the error in the template. Check base.html for the
+            # .alert classes. Also, we need to get the bid and job objects
+            # again, because the transaction was rolled back and the objects
+            # are no longer valid. The objects remained in memory and they retained
+            # the reference the rating object, which never got saved to the db.
+            bid = get_object_or_404(Bid, pk=bid_id)
+            job = bid.job
+            return render(request, 'app/bid_detail.html', {'bid': bid, 'job': job, 'error': e})
 
 
         return HttpResponseRedirect(reverse('app:bid_detail', args=[bid.id]))

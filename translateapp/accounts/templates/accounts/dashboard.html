@@ -28,20 +28,31 @@
 
           <div>
           {% for bid in job.bid_set.all  %}
-            <div class="bid">
-              <h2>
+            <div class="bid {% if bid.accepted %} accepted {% endif %}">
+              <h3>
                 Bidder: 
                 <a href="{% url 'accounts:profile' bid.bidder.id %}">
                   {{ bid.bidder.account.name }}
                 </a>
-              </h2>
-              <p><strong>Price: {{ bid.price }}</strong></p>
-              <p>Accepted: {{ bid.accepted }}</p>
+              </h3>
+              <p>
+                <strong>Price: {{ bid.price }}</strong>, 
+                Accepted: {{ bid.accepted }}
+              </p>
+              {% if not bid.accepted and job.is_available %}
+                <!--check models.py for the is_available method-->
+                <p>
+                  <form action="{% url 'app:accept_bid' bid.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Accept bid">
+                  </form>
+                </p>
+              {% endif %}
             </div>
           {% endfor %}
           </div>
 
-        </div>
+          </div>
       {% endfor %}
 
     </div>

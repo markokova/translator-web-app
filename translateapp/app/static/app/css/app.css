@@ -90,4 +90,13 @@ table.jobs td.bid-controls-row {
   white-space: pre-wrap;
 }
 
+.bid {
+  padding: 5px;
+  border: 1px solid black;
+}
+
+.bid.accepted {
+  background: #f1fff1;
+}
+
 

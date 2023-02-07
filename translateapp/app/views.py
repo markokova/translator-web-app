@@ -79,5 +79,17 @@ def bid(request, job_id):
         else:
             return render(request, 'app/jobs_detail.html', {'job': job, 'form': form})
 
+@login_required
+def accept_bid(request, bid_id):
+    bid = get_object_or_404(Bid, pk=bid_id)
+    job = bid.job
+
+    # check if the user is the job owner, otherwise anyone can accept any bid
+    if request.method == 'POST' and job.user == request.user:
+        bid.accepted = True
+        bid.save()
+        job.status = Job.Status.ASSIGNED
+        job.save()
+        return HttpResponseRedirect(reverse('accounts:dashboard'))
 
 

@@ -78,6 +78,11 @@ class Job(models.Model):
     def owner(self):
         return self.user.account
 
+    # Helper method to check if the job is available, since checking the status
+    # directly from the template is not very readable.
+    def is_available(self):
+        return self.status == self.Status.AVAILABLE
+
     @classmethod
     def accepted_jobs_for(cls, user):
         # Svi bidovi gdje je user napravio job na koji je biddano

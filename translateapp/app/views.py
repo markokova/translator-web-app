@@ -129,5 +129,21 @@ def bid_detail(request, bid_id):
     else:
         return HttpResponseRedirect(reverse('home_path'))
 
+@login_required
+def rate_bid(request, bid_id):
+    bid = get_object_or_404(Bid, pk=bid_id)
+    job = bid.job
+
+    if request.method == 'POST' and request.user == job.user:
+        rating = Rating.objects.create(
+            rating=request.POST['rating'],
+            rater=request.user,
+            rated=bid.bidder,
+            job=job,
+            bid=bid,
+        )
+
+
+        return HttpResponseRedirect(reverse('app:bid_detail', args=[bid.id]))
 
 

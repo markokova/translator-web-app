@@ -15,8 +15,8 @@ class Account(models.Model):
         if ratings.count() == 0:
             return "No ratings yet"
         else:
-            score = [ rating.rating for rating in ratings ] / ratings.count()
-            return score
+            score = [ rating.rating for rating in ratings ]
+            return sum(score) / len(score)
 
 class Job(models.Model):
     class Status(models.TextChoices):
@@ -110,6 +110,8 @@ class Bid(models.Model):
     completed = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.bidder.account.name} - {self.job.title} - {self.price}"
+    def job_owner(self):
+        return self.job.user
 
 class Dispute(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -128,4 +130,5 @@ class Rating(models.Model):
     rater = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rater')
     rated = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rated')
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    bid = models.OneToOneField(Bid, on_delete=models.CASCADE)
     rating = models.IntegerField()

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
       <h1>Translation completed!</h1>
       <p> 
         Bid from <a href="{% url 'accounts:profile' bid.bidder.id %}">{{ bid.bidder.account.name }}</a>
@@ -16,6 +16,33 @@
         {{ job.description }}
       </p>
       <p>Job budget: {{ job.budget }}; Bid amount: {{ bid.price }} </p>
+    </div>
+    <div class="col-md-6">
+      <h1>Rating details</h1>
+      {% if bid.rating  %}
+        <!--if job is completed and rating exists -->
+        {% if user == bid.bidder %}
+          <h2>You were rated: {{ bid.rating.rating }}</h2>
+        {% elif user == bid.job.user %}
+          <h2>You rated this job: {{ bid.rating.rating }}</h2>
+        {% endif %}
+      {% else %}
+        <!--we are still waiting for the job owner to rate the translation -->
+        {% if user == bid.bidder %}
+          <h2>Waiting for the rating from the Job owner</h2>
+        {% elif user == bid.job.user %}
+          <h2>Rate the translation!</h2>
+
+          <form action="{% url 'app:rate_bid' bid.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="1" name="rating" class="btn btn-primary">
+            <input type="submit" value="2" name="rating" class="btn btn-primary">
+            <input type="submit" value="3" name="rating" class="btn btn-primary">
+            <input type="submit" value="4" name="rating" class="btn btn-primary">
+            <input type="submit" value="5" name="rating" class="btn btn-primary">
+          </form>
+        {% endif %}
+      {% endif %}
     </div>
     <div class="col-md-6">
       <p><strong>Original text:</strong></p>

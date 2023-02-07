@@ -52,6 +52,7 @@
                 </p>
               {% elif bid.completed %}
                 <p>
+                  {% if bid.rating %} You rated it {{ bid.rating.rating }} {% endif %}
                   <a href="{% url 'app:bid_detail' bid.id %}">See the completed translation</a>
                 </p>
               {% endif %}

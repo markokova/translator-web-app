@@ -120,7 +120,8 @@ class Bid(models.Model):
 class Dispute(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    reason = models.TextField()
+    bid = models.OneToOneField(Bid, on_delete=models.CASCADE)
+    reason = models.TextField(blank=False, null=False)
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')

@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 from .models import Job, Bid, Dispute, Message, Rating
-from .forms import JobForm, BidForm, TranslationForm
+from .forms import JobForm, BidForm, TranslationForm, DisputeForm
 from django.contrib.auth.decorators import login_required
 
 from django.db import transaction
@@ -122,10 +122,12 @@ def deliver_translation(request, bid_id):
 def bid_detail(request, bid_id):
     bid = get_object_or_404(Bid, pk=bid_id)
     job = bid.job
+    form = DisputeForm()
     if request.user == bid.bidder or request.user == job.user:
         context = {
             'bid': bid,
             'job': job,
+            'form': form,
         }
         return render(request, 'app/bid_detail.html', context)
     else:
@@ -135,6 +137,7 @@ def bid_detail(request, bid_id):
 def rate_bid(request, bid_id):
     bid = get_object_or_404(Bid, pk=bid_id)
     job = bid.job
+    dispute_form = DisputeForm()
 
     if request.method == 'POST' and request.user == job.user:
         # Transaction is used to ensure that all the db operations are
@@ -177,9 +180,34 @@ def rate_bid(request, bid_id):
             # the reference the rating object, which never got saved to the db.
             bid = get_object_or_404(Bid, pk=bid_id)
             job = bid.job
-            return render(request, 'app/bid_detail.html', {'bid': bid, 'job': job, 'error': e})
+            return render(request, 'app/bid_detail.html', {'bid': bid, 'job': job, 'from': form, 'error': e})
 
 
         return HttpResponseRedirect(reverse('app:bid_detail', args=[bid.id]))
+
+
+@login_required
+def raise_dispute(request, bid_id):
+    bid = get_object_or_404(Bid, pk=bid_id)
+    job = bid.job
+    user = request.user
+
+    if request.method == 'POST' and request.user == job.user:
+        form = DisputeForm(request.POST)
+        if form.is_valid():
+            dispute = Dispute(
+                reason=form.cleaned_data['reason'],
+                job=job,
+                bid=bid,
+                user=user,
+            )
+            dispute.save()
+            return HttpResponseRedirect(reverse('app:bid_detail', args=[bid.id]))
+        else:
+            bid = get_object_or_404(Bid, pk=bid_id)
+            job = bid.job
+            return render(request, 'app/bid_detail.html', {'bid': bid, 'job': job, 'form': form, 'error': e})
+
+
 
 

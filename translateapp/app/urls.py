@@ -11,4 +11,5 @@ urlpatterns = [
         path('bids/<int:bid_id>/deliver', views.deliver_translation, name="deliver_translation"),
         path('bids/<int:bid_id>', views.bid_detail, name="bid_detail"),
         path('bids/<int:bid_id>/rating', views.rate_bid, name="rate_bid"),
+        path('bids/<int:bid_id>/dispute', views.raise_dispute, name="dispute"),
 ]

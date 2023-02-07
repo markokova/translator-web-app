@@ -26,6 +26,20 @@
         {% elif user == bid.job.user %}
           <h2>You rated this job: {{ bid.rating.rating }}</h2>
         {% endif %}
+      {% elif bid.dispute  %}
+        <!--if job is completed and rating exists -->
+        {% if user == bid.bidder %}
+          <h2>Your job got disputed!</h2>
+          <p>Waiting for an admin to resolve...</p>
+          <blockquote class="blockquote">
+            {{ bid.dispute.reason }}
+          </blockquote>
+        {% elif user == bid.job.user %}
+          <h2>You disputed this job!</h2>
+          <blockquote class="blockquote">
+            {{ bid.dispute.reason }}
+          </blockquote>
+        {% endif %}
       {% else %}
         <!--we are still waiting for the job owner to rate the translation -->
         {% if user == bid.bidder %}
@@ -40,6 +54,27 @@
             <input type="submit" value="3" name="rating" class="btn btn-primary">
             <input type="submit" value="4" name="rating" class="btn btn-primary">
             <input type="submit" value="5" name="rating" class="btn btn-primary">
+          </form>
+          <p>Or raise a dispute if you're not satisfied</p>
+
+          <form action="{% url 'app:dispute' bid.id %}" method="post">
+            {% csrf_token %}
+
+            {% for field in form.visible_fields %}
+              <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field|add_class:'form-control' }}
+                {% for error in field.errors %}
+                  <span class="help-block">{{ error }}</span>
+                {% endfor %}
+              </div>
+            {% endfor %}
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-danger">
+                <span class="glyphicon glyphicon-ok"></span> Start a Dispute
+              </button>
+            </div>
           </form>
         {% endif %}
       {% endif %}

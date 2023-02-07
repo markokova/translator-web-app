@@ -63,4 +63,12 @@ class TranslationForm(forms.Form):
             self.add_error('translation', 'Translation must not be empty')
 
 
+class DisputeForm(ModelForm):
+    class Meta: 
+        model = Dispute
+        fields = ['reason']
+
+    labels = {
+        "reason": "Please explain your reasons for the dispute",
+    }
 

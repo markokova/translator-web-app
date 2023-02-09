@@ -3,10 +3,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.urls import reverse
 from .models import Job, Bid, Dispute, Message, Rating
-from .forms import JobForm, BidForm, TranslationForm, DisputeForm
+from .forms import JobForm, BidForm, TranslationForm, DisputeForm, MessageForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from django.db import transaction
+import datetime
 
 # Create your views here.
 def home(request):
@@ -209,5 +211,21 @@ def raise_dispute(request, bid_id):
             return render(request, 'app/bid_detail.html', {'bid': bid, 'job': job, 'form': form, 'error': e})
 
 
-
-
+@login_required
+def send_message(request, job_id):
+	form = MessageForm()
+	job = get_object_or_404(Job, pk=job_id)
+	context ={
+		'form': form,
+		'job': job,
+	}
+	if request.method == 'POST':
+		form = MessageForm(request.POST)
+		if form.is_valid():
+			message = Message(sender= request.user, receiver= User.objects.get(pk=job.user.id), text= form.cleaned_data['text'])
+			message.save()
+			return HttpResponseRedirect(reverse('app:jobs', args=[]) )
+			#return HttpResponse(reverse('app:send_message'), args=[job.id])
+		else:
+			print(form.errors)
+	return render(request, 'app/message.html', context)

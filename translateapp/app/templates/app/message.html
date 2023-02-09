@@ -1,0 +1,14 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<div>
+    <h2>Send message:</h2>
+    <form action="{% url 'app:message' job.id %}" method="post">
+        {% csrf_token %} {{ form.as_p }}
+
+        <input type="submit" value="Send"/>
+    </form>
+</div>
+
+{% endblock content %}

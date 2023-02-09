@@ -13,7 +13,7 @@
         </strong>
       </td>
       <td>
-        <a href="{% url 'accounts:profile' job.owner.id %}">
+        <a href="{% url "accounts:profile" job.owner.id %}">
           {{ job.owner.name }}
         </a>
       </td>
@@ -32,7 +32,7 @@
     <tr>
       <td colspan="4" class="bid-controls-row">
         <a href="{% url 'app:job_detail' job.id %}" class="btn btn-success">Submit a quote</a>
-        <a href="{% url 'app:job_detail' job.id %}" class="btn btn-primary">Message Job Owner</a>
+        <a href="{% url 'app:message' job.id %}" class="btn btn-primary">Message Job Owner</a>
       </td>
     </tr>
 {% empty %}

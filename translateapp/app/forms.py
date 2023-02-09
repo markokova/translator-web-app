@@ -72,3 +72,13 @@ class DisputeForm(ModelForm):
         "reason": "Please explain your reasons for the dispute",
     }
 
+class MessageForm(ModelForm):
+    class Meta:
+        model = Message
+        fields = ['text']
+
+#class MessageForm(ModelForm):
+#	class Meta:
+#		model = Message
+#		fields = '__all__'
+#text = forms.CharField(label = 'Your message', max_length = 100)
